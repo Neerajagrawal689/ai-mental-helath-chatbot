@@ -1,0 +1,25 @@
+{
+  "anxiety": [
+    "Take 5 slow deep breaths.",
+    "Try the 5-4-3-2-1 grounding technique.",
+    "Write down what is worrying you.",
+    "Go for a short walk."
+  ],
+  "sad": [
+    "Talk to someone you trust.",
+    "Listen to calming music.",
+    "Write your feelings in a journal.",
+    "Try a small self-care activity."
+  ],
+  "stress": [
+    "Break tasks into smaller steps.",
+    "Take short breaks.",
+    "Practice progressive muscle relaxation.",
+    "Drink water and stretch."
+  ],
+  "anger": [
+    "Pause before reacting.",
+    "Take 10 deep breaths.",
+    "Step away from the situation temporarily."
+  ]
+}

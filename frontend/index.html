@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mental Health Companion</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<!-- 🔵 Navbar -->
+<div class="navbar">
+    <a id="logo">🧠 Mental Health Companion</a>
+
+    <div class="nav-right">
+        <span id="nav-user">Guest</span>
+
+        <button id="login-btn" onclick="goToLogin()">Login</button>
+        <button id="logout-btn" onclick="logout()" style="display:none;">Logout</button>
+
+        <button id="theme-toggle">🌙</button>
+        <button onclick="newChat()" class="new-chat-btn">New Chat</button>
+    </div>
+</div>
+
+<!-- 💬 Chat Section -->
+<div class="chat-wrapper">
+
+    <div id="chat-box"></div>
+
+    <div class="input-area">
+        <input type="text" id="user-input" placeholder="Type your message..." />
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="script.js"></script>
+
+<script>
+// 🔁 Go to login page
+function goToLogin() {
+    window.location.href = "login.html";
+}
+
+// 🔐 Check session on load
+document.addEventListener("DOMContentLoaded", async function () {
+
+    const { createClient } = supabase;
+
+    const SUPABASE_URL = "https://zyafedcrfrtkdieznqhh.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_DqhStG2Y2zKhPGnBdrxw5A_v5B-2yec";
+
+    const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const { data } = await db.auth.getUser();
+
+    if (data.user) {
+        document.getElementById("nav-user").innerText = data.user.email;
+        document.getElementById("login-btn").style.display = "none";
+        document.getElementById("logout-btn").style.display = "inline-block";
+    } else {
+        document.getElementById("nav-user").innerText = "Guest";
+    }
+});
+</script>
+
+</body>
+</html>

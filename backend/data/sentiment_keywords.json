@@ -1,0 +1,10 @@
+{
+  "stress": ["stress", "pressure", "burden", "exam", "deadline", "workload"],
+  "anxiety": ["anxious", "nervous", "panic", "fear", "worried"],
+  "sadness": ["sad", "depressed", "low", "cry", "heartbroken"],
+  "lonely": ["alone", "lonely", "isolated", "no friends"],
+  "angry": ["angry", "frustrated", "irritated", "rage"],
+  "overwhelmed": ["tired", "exhausted", "burnout", "too much work"],
+  "fear": ["scared", "afraid", "fearful"],
+  "happy": ["happy", "good", "excited", "great", "joy"]
+}

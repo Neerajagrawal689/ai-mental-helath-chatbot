@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - Mental Health Companion</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="login-page">
+
+<!-- 🔵 Navbar -->
+<div class="navbar">
+    <a id="logo">🧠 Mental Health Companion</a>
+
+    <div class="nav-right">
+        <span id="nav-user">Guest</span>
+
+        <button id="login-btn" onclick="goToLogin()">Login</button>
+        <button id="logout-btn" onclick="logout()" style="display:none;">Logout</button>
+
+        <button id="theme-toggle">🌙</button>
+        <button onclick="newChat()" class="new-chat-btn">New Chat</button>
+    </div>
+</div>
+
+<!-- 🔐 Login Section -->
+<div class="login-container">
+    <div class="login-card">
+        <h2>Welcome Back 👋</h2>
+        <p class="subtitle">Login to continue chatting</p>
+
+        <input type="email" id="email" placeholder="Enter Email" required>
+        <input type="password" id="password" placeholder="Enter Password" required>
+
+        <button class="btn-primary" onclick="login()">Login</button>
+        <button class="btn-secondary" onclick="register()">Create Account</button>
+
+        <!-- ✅ Back Button -->
+        <button onclick="goBack()" style="margin-top:10px;">⬅ Back</button>
+
+        <p id="user-info"></p>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="script.js"></script>
+
+<!-- ✅ Back Function -->
+<script>
+function goBack() {
+    window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>
