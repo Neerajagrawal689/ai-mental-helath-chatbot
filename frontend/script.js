@@ -6,6 +6,9 @@ const SUPABASE_KEY = "sb_publishable_DqhStG2Y2zKhPGnBdrxw5A_v5B-2yec";
 
 const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
+// 🌐 BACKEND URL (Render Production)
+const BACKEND_URL = "https://ai-mental-helath-chatbot.onrender.com";
+
 
 // 🌙 INITIAL SETUP
 document.addEventListener("DOMContentLoaded", function () {
@@ -73,23 +76,18 @@ async function login() {
         alert(error.message);
     } else {
         alert("Login successful!");
-
-        // Reset free counter
         localStorage.removeItem("freeCount");
-
         window.location.href = "index.html";
     }
 }
 
 
-// 🔓 LOGOUT (UPDATED)
+// 🔓 LOGOUT
 async function logout() {
     await db.auth.signOut();
 
-    // Reset free message limit
     localStorage.removeItem("freeCount");
 
-    // Update navbar instantly
     const navUser = document.getElementById("nav-user");
     const loginBtn = document.getElementById("login-btn");
     const logoutBtn = document.getElementById("logout-btn");
@@ -98,7 +96,6 @@ async function logout() {
     if (loginBtn) loginBtn.style.display = "inline-block";
     if (logoutBtn) logoutBtn.style.display = "none";
 
-    // Redirect to chat page
     window.location.href = "index.html";
 }
 
@@ -141,14 +138,12 @@ async function sendMessage() {
 
     let remaining = 10 - freeCount;
 
-    // 🚫 Block if limit reached
     if (!user && remaining <= 0) {
         alert("You have used all 10 free messages. Please login to continue.");
         window.location.href = "login.html";
         return;
     }
 
-    // ⚠️ Warning when 2 left
     if (!user && remaining === 2) {
         alert("⚠️ Only 2 free messages left. Login for unlimited access.");
     }
@@ -156,7 +151,7 @@ async function sendMessage() {
     inputField.value = "";
 
     try {
-        const response = await fetch("http://127.0.0.1:5000/chat", {
+        const response = await fetch(`${BACKEND_URL}/chat`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ message })
@@ -227,7 +222,7 @@ function appendNewMessages(history, emotion, confidence) {
 // 🔥 NEW CHAT
 async function newChat() {
     try {
-        await fetch("http://127.0.0.1:5000/reset", { method: "POST" });
+        await fetch(`${BACKEND_URL}/reset`, { method: "POST" });
     } catch (error) {
         console.error(error);
     }
