@@ -1,0 +1,56 @@
+# =========================
+# Python Virtual Environment
+# =========================
+venv/
+env/
+ENV/
+
+# =========================
+# Python Cache
+# =========================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+
+# =========================
+# Environment Variables
+# =========================
+.env
+
+# =========================
+# Flask
+# =========================
+instance/
+.flaskenv
+
+# =========================
+# Logs
+# =========================
+*.log
+
+# =========================
+# VS Code
+# =========================
+.vscode/
+
+# =========================
+# Mac / Windows system files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Node (future use)
+# =========================
+node_modules/
+
+# =========================
+# Data Files (Keep for ML)
+# =========================
+# Do NOT ignore backend/data/ folder
+!backend/data/
+!backend/data/*.csv
+!backend/data/*.json
+!backend/data/*.txt
