@@ -1,3 +1,4 @@
+const BACKEND_URL = "https://ai-mental-helath-chatbot.onrender.com";
 // 🔥 SUPABASE CONNECTION
 const { createClient } = supabase;
 
@@ -5,9 +6,6 @@ const SUPABASE_URL = "https://zyafedcrfrtkdieznqhh.supabase.co";
 const SUPABASE_KEY = "sb_publishable_DqhStG2Y2zKhPGnBdrxw5A_v5B-2yec";
 
 const db = createClient(SUPABASE_URL, SUPABASE_KEY);
-
-// 🌐 BACKEND URL (Render Production)
-const BACKEND_URL = "https://ai-mental-helath-chatbot.onrender.com";
 
 
 // 🌙 INITIAL SETUP
