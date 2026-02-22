@@ -12,6 +12,12 @@ const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 document.addEventListener("DOMContentLoaded", function () {
 
     showUser();
+    // 🔥 Warm-up backend to avoid cold start delay
+    fetch(`${BACKEND_URL}/chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: "warmup" })
+    }).catch(() => {});
 
     const toggleBtn = document.getElementById("theme-toggle");
     const inputField = document.getElementById("user-input");
@@ -118,7 +124,7 @@ async function showUser() {
 }
 
 
-// 💬 SEND MESSAGE WITH FREE LIMIT
+// 💬 SEND MESSAGE WITH FREE LIMIT + TYPING
 async function sendMessage() {
 
     const inputField = document.getElementById("user-input");
@@ -148,6 +154,12 @@ async function sendMessage() {
 
     inputField.value = "";
 
+    // 🔹 Immediately show user message
+    appendNewMessages([{ sender: "user", text: message }]);
+
+    // 🔹 Show typing animation
+    const typingIndicator = showTyping();
+
     try {
         const response = await fetch(`${BACKEND_URL}/chat`, {
             method: "POST",
@@ -156,6 +168,9 @@ async function sendMessage() {
         });
 
         const data = await response.json();
+
+        // 🔹 Remove typing animation
+        if (typingIndicator) typingIndicator.remove();
 
         appendNewMessages(data.history, data.emotion, data.confidence);
 
@@ -176,11 +191,31 @@ async function sendMessage() {
         }
 
     } catch (error) {
+        if (typingIndicator) typingIndicator.remove();
         console.error(error);
         alert("Backend not connected.");
     }
 }
 
+// 🔵 Show Typing Indicator
+function showTyping() {
+    const chatBox = document.getElementById("chat-box");
+    if (!chatBox) return null;
+
+    const typingDiv = document.createElement("div");
+    typingDiv.classList.add("message", "typing-indicator");
+
+    typingDiv.innerHTML = `
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+    `;
+
+    chatBox.appendChild(typingDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    return typingDiv;
+}
 
 // ✅ APPEND MESSAGE
 function appendNewMessages(history, emotion, confidence) {
