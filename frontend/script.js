@@ -172,7 +172,8 @@ async function sendMessage() {
         // 🔹 Remove typing animation
         if (typingIndicator) typingIndicator.remove();
 
-        appendNewMessages(data.history, data.emotion, data.confidence);
+        const botReply = data.history[data.history.length - 1];
+        appendNewMessages([botReply], data.emotion, data.confidence);
 
         if (user) {
             const lastMessages = data.history.slice(-2);
@@ -223,7 +224,7 @@ function appendNewMessages(history, emotion, confidence) {
     const chatBox = document.getElementById("chat-box");
     if (!chatBox) return;
 
-    const lastMessages = history.slice(-2);
+     const lastMessages = history;
 
     lastMessages.forEach((msg) => {
         const div = document.createElement("div");
