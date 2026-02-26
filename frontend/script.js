@@ -1,9 +1,9 @@
 const BACKEND_URL = "https://ai-mental-helath-chatbot.onrender.com";
 // 🔥 SUPABASE CONNECTION
-const { createClient } = supabase;
+const { createClient } = window.supabase;
 
 const SUPABASE_URL = "https://zyafedcrfrtkdieznqhh.supabase.co";
-const SUPABASE_KEY = "sb_publishable_DqhStG2Y2zKhPGnBdrxw5A_v5B-2yec";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5YWZlZGNyZnJ0a2RpZXpucWhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE0OTYyMDgsImV4cCI6MjA4NzA3MjIwOH0.UcKYsZdB-l-DODxGW-9WgdIwRfuPAFgQ1f4N8oMmdy8";
 
 const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
