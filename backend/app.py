@@ -15,7 +15,6 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # =====================================================
 # LOAD RESPONSES
 # =====================================================
-
 responses = {}
 csv_path = os.path.join(BASE_DIR, "data", "mental_health_responses.csv")
 
@@ -30,7 +29,6 @@ except Exception as e:
 # =====================================================
 # LOAD SENTIMENT KEYWORDS
 # =====================================================
-
 sentiment_keywords = {}
 json_path = os.path.join(BASE_DIR, "data", "sentiment_keywords.json")
 
@@ -43,7 +41,6 @@ except Exception as e:
 # =====================================================
 # LOAD RELAXATION TIPS
 # =====================================================
-
 relaxation_tips = []
 tips_path = os.path.join(BASE_DIR, "data", "relaxation_tips.txt")
 
@@ -56,7 +53,6 @@ except Exception as e:
 # =====================================================
 # LOAD CRISIS SUPPORT MESSAGE
 # =====================================================
-
 crisis_support_message = ""
 crisis_path = os.path.join(BASE_DIR, "data", "crisis_support.txt")
 
@@ -70,10 +66,8 @@ except Exception as e:
 # =====================================================
 # TRAIN ML MODEL
 # =====================================================
-
 training_texts = []
 training_labels = []
-
 train_path = os.path.join(BASE_DIR, "data", "training_data.csv")
 
 try:
@@ -99,30 +93,24 @@ else:
 # =====================================================
 # KEYWORDS
 # =====================================================
-
 greetings = ["hi", "hello", "hey", "hii", "good morning", "good evening"]
-
 tip_keywords = ["tip", "advice", "suggestion", "what should i do", "how to relax"]
-
-crisis_keywords = [
-    "suicide", "kill myself", "end my life",
-    "self harm", "i want to die", "hurt myself"
-]
-
-end_keywords = [
-    "bye", "goodbye", "see you", "exit",
-    "quit", "thank you", "thanks", "talk later"
-]
+crisis_keywords = ["suicide", "kill myself", "end my life", "self harm", "i want to die", "hurt myself"]
+end_keywords = ["bye", "goodbye", "see you", "exit", "quit", "thank you", "thanks", "talk later"]
 
 # =====================================================
 # ROUTES
 # =====================================================
 
-# ✅ API Root (No template now)
+# ✅ API Root
 @app.route("/")
 def home():
     return jsonify({"message": "Mental Health Chatbot API is running 🚀"})
 
+# ✅ Health Check Route
+@app.route("/health")
+def health():
+    return jsonify({"status": "OK"})
 
 @app.route("/chat", methods=["POST"])
 def chat():
@@ -218,13 +206,9 @@ def chat():
         "history": session["history"]
     })
 
-
 # =====================================================
 # RUN
 # =====================================================
-
 if __name__ == "__main__":
-    import os
-
     port = int(os.environ.get("PORT", 5000))  # default 5000 for local
     app.run(host="0.0.0.0", port=port, debug=True)

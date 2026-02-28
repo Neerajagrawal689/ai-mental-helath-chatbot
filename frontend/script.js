@@ -143,3 +143,8 @@ async function newChat() {
     const chatBox = document.getElementById("chat-box");
     if (chatBox) chatBox.innerHTML = "";
 }
+// 🟢 Periodic Ping to keep backend warm
+setInterval(() => {
+  fetch(`${BACKEND_URL}/health`)
+    .catch(() => {});
+}, 10 * 60 * 1000); // हर 10 मिनट पर ping
