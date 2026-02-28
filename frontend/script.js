@@ -2,17 +2,16 @@ const BACKEND_URL = "https://ai-mental-helath-chatbot.onrender.com";
 // 🔥 SUPABASE CONNECTION
 const { createClient } = window.supabase;
 
-const SUPABASE_URL = "https://zyafedcrfrtkdieznqhh.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5YWZlZGNyZnJ0a2RpZXpucWhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE0OTYyMDgsImV4cCI6MjA4NzA3MjIwOH0.UcKYsZdB-l-DODxGW-9WgdIwRfuPAFgQ1f4N8oMmdy8";
+const SUPABASE_URL = "https://ciejaikwbjcnlfegiahg.supabase.co";
+const SUPABASE_KEY = "sb_publishable_qLvQt0KAcq8zGW3hXlexsg_0Bo0si-i";
 
 const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-
 // 🌙 INITIAL SETUP
 document.addEventListener("DOMContentLoaded", function () {
-
     showUser();
-    // 🔥 Warm-up backend to avoid cold start delay
+
+    // 🔥 Warm-up backend
     fetch(`${BACKEND_URL}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -53,7 +52,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-
 // 🔐 REGISTER
 async function register() {
     const email = document.getElementById("email").value;
@@ -67,7 +65,6 @@ async function register() {
         alert("Registration successful! Check your email.");
     }
 }
-
 
 // 🔐 LOGIN
 async function login() {
@@ -85,7 +82,6 @@ async function login() {
     }
 }
 
-
 // 🔓 LOGOUT
 async function logout() {
     await db.auth.signOut();
@@ -102,7 +98,6 @@ async function logout() {
 
     window.location.href = "index.html";
 }
-
 
 // 👤 SHOW USER
 async function showUser() {
@@ -123,10 +118,8 @@ async function showUser() {
     }
 }
 
-
-// 💬 SEND MESSAGE WITH FREE LIMIT + TYPING
+// 💬 SEND MESSAGE (limit removed)
 async function sendMessage() {
-
     const inputField = document.getElementById("user-input");
     if (!inputField) return;
 
@@ -135,22 +128,6 @@ async function sendMessage() {
 
     const { data: userData } = await db.auth.getUser();
     const user = userData?.user;
-
-    let freeCount = localStorage.getItem("freeCount")
-        ? parseInt(localStorage.getItem("freeCount"))
-        : 0;
-
-    let remaining = 10 - freeCount;
-
-    if (!user && remaining <= 0) {
-        alert("You have used all 10 free messages. Please login to continue.");
-        window.location.href = "login.html";
-        return;
-    }
-
-    if (!user && remaining === 2) {
-        alert("⚠️ Only 2 free messages left. Login for unlimited access.");
-    }
 
     inputField.value = "";
 
@@ -186,9 +163,6 @@ async function sendMessage() {
                     confidence: msg.sender === "bot" ? data.confidence : null
                 });
             }
-        } else {
-            freeCount++;
-            localStorage.setItem("freeCount", freeCount);
         }
 
     } catch (error) {
@@ -220,11 +194,10 @@ function showTyping() {
 
 // ✅ APPEND MESSAGE
 function appendNewMessages(history, emotion, confidence) {
-
     const chatBox = document.getElementById("chat-box");
     if (!chatBox) return;
 
-     const lastMessages = history;
+    const lastMessages = history;
 
     lastMessages.forEach((msg) => {
         const div = document.createElement("div");
@@ -251,7 +224,6 @@ function appendNewMessages(history, emotion, confidence) {
 
     chatBox.scrollTop = chatBox.scrollHeight;
 }
-
 
 // 🔥 NEW CHAT
 async function newChat() {
