@@ -1,16 +1,7 @@
 const BACKEND_URL = "https://ai-mental-helath-chatbot.onrender.com";
-// 🔥 SUPABASE CONNECTION
-const { createClient } = window.supabase;
-
-const SUPABASE_URL = "https://ciejaikwbjcnlfegiahg.supabase.co";
-const SUPABASE_KEY = "sb_publishable_qLvQt0KAcq8zGW3hXlexsg_0Bo0si-i";
-
-const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // 🌙 INITIAL SETUP
 document.addEventListener("DOMContentLoaded", function () {
-    showUser();
-
     // 🔥 Warm-up backend
     fetch(`${BACKEND_URL}/chat`, {
         method: "POST",
@@ -52,82 +43,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-// 🔐 REGISTER
-async function register() {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-
-    const { error } = await db.auth.signUp({ email, password });
-
-    if (error) {
-        alert(error.message);
-    } else {
-        alert("Registration successful! Check your email.");
-    }
-}
-
-// 🔐 LOGIN
-async function login() {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-
-    const { error } = await db.auth.signInWithPassword({ email, password });
-
-    if (error) {
-        alert(error.message);
-    } else {
-        alert("Login successful!");
-        localStorage.removeItem("freeCount");
-        window.location.href = "index.html";
-    }
-}
-
-// 🔓 LOGOUT
-async function logout() {
-    await db.auth.signOut();
-
-    localStorage.removeItem("freeCount");
-
-    const navUser = document.getElementById("nav-user");
-    const loginBtn = document.getElementById("login-btn");
-    const logoutBtn = document.getElementById("logout-btn");
-
-    if (navUser) navUser.innerText = "Guest";
-    if (loginBtn) loginBtn.style.display = "inline-block";
-    if (logoutBtn) logoutBtn.style.display = "none";
-
-    window.location.href = "index.html";
-}
-
-// 👤 SHOW USER
-async function showUser() {
-    const { data } = await db.auth.getUser();
-
-    const navUser = document.getElementById("nav-user");
-    const loginBtn = document.getElementById("login-btn");
-    const logoutBtn = document.getElementById("logout-btn");
-
-    if (data.user) {
-        if (navUser) navUser.innerText = data.user.email;
-        if (loginBtn) loginBtn.style.display = "none";
-        if (logoutBtn) logoutBtn.style.display = "inline-block";
-    } else {
-        if (navUser) navUser.innerText = "Guest";
-        if (loginBtn) loginBtn.style.display = "inline-block";
-        if (logoutBtn) logoutBtn.style.display = "none";
-    }
-}
-
-// 💬 SEND MESSAGE (limit removed)
+// 💬 SEND MESSAGE (no database insert)
 async function sendMessage() {
     const inputField = document.getElementById("user-input");
     if (!inputField) return;
 
     const message = inputField.value.trim();
     if (!message) return;
-
-    const { data: userData } = await db.auth.getUser();
-    const user = userData?.user;
 
     inputField.value = "";
 
@@ -151,19 +73,6 @@ async function sendMessage() {
 
         const botReply = data.history[data.history.length - 1];
         appendNewMessages([botReply], data.emotion, data.confidence);
-
-        if (user) {
-            const lastMessages = data.history.slice(-2);
-            for (let msg of lastMessages) {
-                await db.from("chats").insert({
-                    user_id: user.id,
-                    sender: msg.sender,
-                    message: msg.text,
-                    emotion: msg.sender === "bot" ? data.emotion : null,
-                    confidence: msg.sender === "bot" ? data.confidence : null
-                });
-            }
-        }
 
     } catch (error) {
         if (typingIndicator) typingIndicator.remove();
@@ -197,9 +106,7 @@ function appendNewMessages(history, emotion, confidence) {
     const chatBox = document.getElementById("chat-box");
     if (!chatBox) return;
 
-    const lastMessages = history;
-
-    lastMessages.forEach((msg) => {
+    history.forEach((msg) => {
         const div = document.createElement("div");
         div.classList.add("message");
 
