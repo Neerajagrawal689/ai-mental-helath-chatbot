@@ -1,41 +1,645 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mental Health Companion</title>
-<link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serene — AI Mental Health & Wellness Companion</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="light-mode">
 
-<!-- Navbar -->
-<div class="navbar">
-    <a id="logo" style= "color: white" href="index.html">
-        🧠 
-        <span class="full-title">Mental Health Companion</span>
-        <span class="short-title">Mental Health</span>
-    </a>
+    <!-- APP CONTAINER WITH MODERN SIDEBAR + CHAT CANVAS -->
+    <div class="app-container">
+        
+        <!-- ============================================== -->
+        <!-- SIDEBAR NAVIGATION                             -->
+        <!-- ============================================== -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand">
+                    <div class="brand-avatar">
+                        <span class="brand-pulse"></span>
+                        🌿
+                    </div>
+                    <div class="brand-meta">
+                        <h2>Serene</h2>
+                        <span class="status-indicator">
+                            <span class="status-dot"></span> Online & Listening
+                        </span>
+                    </div>
+                </div>
+                <button class="icon-btn sidebar-collapse-btn" onclick="toggleSidebar()" title="Collapse sidebar (Ctrl+B)" aria-label="Collapse sidebar">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="9" y1="3" x2="9" y2="21"></line>
+                        <path d="m14 9-3 3 3 3"></path>
+                    </svg>
+                </button>
+            </div>
 
-    <div class="nav-right">
-       
-        <button id="theme-toggle">🌙</button>
-        <button onclick="newChat()" class="new-chat-btn">New Chat</button>
+            <div class="sidebar-action">
+                <button class="new-conversation-btn" onclick="newChat()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <span>New Conversation</span>
+                </button>
+            </div>
+
+            <!-- WELLNESS TOOLKIT MENU -->
+            <div class="sidebar-section">
+                <div class="section-label">WELLNESS TOOLKIT</div>
+                <nav class="tool-nav">
+                    <button class="tool-nav-item" onclick="openBreathingModal()">
+                        <span class="tool-icon">🌬️</span>
+                        <div class="tool-details">
+                            <strong>Mindful Breathing</strong>
+                            <small>Box (4-4-4-4) & 4-7-8 Breath</small>
+                        </div>
+                    </button>
+
+                    <button class="tool-nav-item" onclick="openGroundingModal()">
+                        <span class="tool-icon">🧘</span>
+                        <div class="tool-details">
+                            <strong>5-4-3-2-1 Grounding</strong>
+                            <small>Calm sensory overload</small>
+                        </div>
+                    </button>
+
+                    <button class="tool-nav-item" onclick="openMoodModal()">
+                        <span class="tool-icon">📊</span>
+                        <div class="tool-details">
+                            <strong>Daily Mood Journal</strong>
+                            <small>Track your emotional state</small>
+                        </div>
+                    </button>
+
+                    <button class="tool-nav-item item-cbt" onclick="openCbtModal()">
+                        <span class="tool-icon">🧠</span>
+                        <div class="tool-details">
+                            <strong>Thought Reframer (CBT)</strong>
+                            <small>Challenge & reframe negative loops</small>
+                        </div>
+                    </button>
+
+                    <button class="tool-nav-item item-sos" onclick="openSosModal()">
+                        <span class="tool-icon">🆘</span>
+                        <div class="tool-details">
+                            <strong>Emergency Helplines</strong>
+                            <small>24x7 Verified Crisis Support</small>
+                        </div>
+                    </button>
+                </nav>
+            </div>
+
+            <!-- CHAT HISTORY / RECENT SESSIONS -->
+            <div class="sidebar-section history-section">
+                <div class="section-label">SAVED SESSIONS</div>
+                <div id="session-list" class="session-list">
+                    <div class="empty-sessions">Current active conversation</div>
+                </div>
+            </div>
+
+            <!-- SIDEBAR FOOTER -->
+            <div class="sidebar-footer">
+                <div class="privacy-pill">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                    <span>Private & Confidential</span>
+                </div>
+                <div class="footer-controls">
+                    <button id="theme-toggle" class="icon-btn" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+                        <span id="theme-icon">🌙</span>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- SIDEBAR BACKDROP FOR MOBILE -->
+        <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+        <!-- ============================================== -->
+        <!-- MAIN CHAT CANVAS                               -->
+        <!-- ============================================== -->
+        <div class="chat-canvas">
+            
+            <!-- TOP APP BAR -->
+            <header class="app-bar">
+                <div class="app-bar-left">
+                    <button class="icon-btn sidebar-toggle-btn" id="sidebar-toggle-btn" onclick="toggleSidebar()" title="Toggle sidebar (Ctrl+B)" aria-label="Toggle sidebar">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="9" y1="3" x2="9" y2="21"></line>
+                        </svg>
+                    </button>
+                    <div class="companion-status">
+                        <div class="companion-avatar">🌿</div>
+                        <div>
+                            <div class="companion-name">Serene AI</div>
+                            <div class="companion-sub">Trauma-Informed Empathetic Guide</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="app-bar-actions">
+                    <!-- AMBIENT SOUND GENERATOR (WEB AUDIO API) -->
+                    <div class="ambient-sound-container">
+                        <button class="pill-btn sound-pill-btn" id="ambient-sound-btn" onclick="toggleAmbientMenu()" title="Play calming background soundscapes">
+                            <span id="ambient-btn-icon">🌧️</span>
+                            <span id="ambient-btn-label">Ambient: Off</span>
+                        </button>
+                        <div class="ambient-sound-menu hidden" id="ambient-sound-menu">
+                            <div class="ambient-menu-header">
+                                <strong>🎧 Ambient Soundscapes</strong>
+                                <button class="close-menu-btn" onclick="toggleAmbientMenu()">✕</button>
+                            </div>
+                            <div class="ambient-sound-options">
+                                <button class="sound-option-btn active" id="sound-btn-off" onclick="setAmbientSound('off')">
+                                    <span>⏹️ Off (Silent)</span>
+                                </button>
+                                <button class="sound-option-btn" id="sound-btn-rain" onclick="setAmbientSound('rain')">
+                                    <span>🌧️ Gentle Rain</span>
+                                </button>
+                                <button class="sound-option-btn" id="sound-btn-ocean" onclick="setAmbientSound('ocean')">
+                                    <span>🌊 Ocean Waves</span>
+                                </button>
+                                <button class="sound-option-btn" id="sound-btn-zen" onclick="setAmbientSound('zen')">
+                                    <span>🍃 Zen Noise</span>
+                                </button>
+                            </div>
+                            <div class="ambient-volume-row">
+                                <span class="vol-icon">🔉</span>
+                                <input type="range" id="ambient-volume" min="0" max="1" step="0.05" value="0.35" oninput="setAmbientVolume(this.value)" title="Volume Slider" />
+                                <span class="vol-icon">🔊</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="pill-btn tool-pill-btn" onclick="openBreathingModal()">
+                        <span>🌬️ Breathe</span>
+                    </button>
+                    <button class="pill-btn sos-pill-btn" onclick="openSosModal()">
+                        <span>🆘 SOS Helplines</span>
+                    </button>
+                    <button class="icon-btn clear-chat-btn" onclick="newChat()" title="Start New Chat">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="1 4 1 10 7 10"></polyline>
+                            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                        </svg>
+                    </button>
+                </div>
+            </header>
+
+            <!-- CHAT STREAM SCROLL CONTAINER -->
+            <main class="chat-viewport" id="chat-viewport">
+                
+                <!-- HERO WELCOME & MOOD CHECK-IN (Shown on empty conversation) -->
+                <div class="hero-card" id="hero-card">
+                    <div class="hero-badge">A Safe Sanctuary for Your Thoughts</div>
+                    <h1 class="hero-title">How is your heart feeling right now?</h1>
+                    <p class="hero-subtitle">Serene is here to listen without judgment. Select a mood to begin or start typing below.</p>
+
+                    <!-- INTERACTIVE MOOD SELECTOR -->
+                    <div class="mood-selector">
+                        <button class="mood-chip" onclick="selectMood('Anxious', '😰')">
+                            <span class="mood-emoji">😰</span>
+                            <span class="mood-title">Anxious</span>
+                        </button>
+                        <button class="mood-chip" onclick="selectMood('Overwhelmed', '😣')">
+                            <span class="mood-emoji">😣</span>
+                            <span class="mood-title">Overwhelmed</span>
+                        </button>
+                        <button class="mood-chip" onclick="selectMood('Exhausted', '😴')">
+                            <span class="mood-emoji">😴</span>
+                            <span class="mood-title">Exhausted</span>
+                        </button>
+                        <button class="mood-chip" onclick="selectMood('Down / Sad', '🌧️')">
+                            <span class="mood-emoji">🌧️</span>
+                            <span class="mood-title">Low / Sad</span>
+                        </button>
+                        <button class="mood-chip" onclick="selectMood('Just Okay', '😐')">
+                            <span class="mood-emoji">😐</span>
+                            <span class="mood-title">Just Okay</span>
+                        </button>
+                        <button class="mood-chip" onclick="selectMood('Calm & Good', '✨')">
+                            <span class="mood-emoji">✨</span>
+                            <span class="mood-title">Calm & Good</span>
+                        </button>
+                    </div>
+
+                    <!-- FEATURE SHORTCUT CARDS -->
+                    <div class="feature-cards-grid">
+                        <div class="feature-card" onclick="openBreathingModal()">
+                            <div class="card-icon">🌬️</div>
+                            <h3>Box Breathing</h3>
+                            <p>4-4-4-4 rhythm to quickly reset your nervous system.</p>
+                            <span class="card-link">Start exercise →</span>
+                        </div>
+                        <div class="feature-card" onclick="openGroundingModal()">
+                            <div class="card-icon">🧘</div>
+                            <h3>5-4-3-2-1 Grounding</h3>
+                            <p>Sensory check to bring you back to the present moment.</p>
+                            <span class="card-link">Try grounding →</span>
+                        </div>
+                        <div class="feature-card" onclick="handleChipClick('I feel overwhelmed with work and obligations today')">
+                            <div class="card-icon">💭</div>
+                            <h3>Unpack Your Mind</h3>
+                            <p>Vent safely and organize your spiraling thoughts.</p>
+                            <span class="card-link">Talk it out →</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DYNAMIC MESSAGES STREAM -->
+                <div class="message-stream" id="message-stream"></div>
+            </main>
+
+            <!-- FLOATING INPUT COMPOSER DOCK -->
+            <footer class="composer-dock">
+                <!-- QUICK PROMPT CHIPS -->
+                <div class="suggestion-chips" id="suggestion-chips">
+                    <button class="chip" onclick="openCbtModal()">🧠 Reframe Thought (CBT)</button>
+                    <button class="chip" onclick="handleChipClick('🌬️ Box Breathing')">🌬️ Box Breathing</button>
+                    <button class="chip" onclick="handleChipClick('I am feeling overwhelmed with anxiety right now')">⚡ High Anxiety</button>
+                    <button class="chip" onclick="openGroundingModal()">🧘 5-4-3-2-1 Grounding</button>
+                    <button class="chip" onclick="handleChipClick('I am having trouble sleeping, can you help me relax?')">🌙 Can't Sleep</button>
+                    <button class="chip" onclick="handleChipClick('I just need a safe space to vent about what happened')">💭 Need to Vent</button>
+                    <button class="chip" onclick="handleChipClick('Can you give me a grounding relaxation tip?')">💡 Relaxation Tip</button>
+                </div>
+
+                <!-- INPUT BAR -->
+                <div class="composer-container">
+                    <textarea 
+                        id="user-input" 
+                        class="composer-input" 
+                        placeholder="What's weighing on your mind? Take your time..." 
+                        rows="1"
+                        autocomplete="off"></textarea>
+                    
+                    <!-- VOICE INPUT (MIC) BUTTON -->
+                    <button id="mic-btn" class="composer-action-btn mic-button" onclick="toggleVoiceInput()" title="Speak in Hindi/English (Voice Input)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                            <line x1="12" y1="19" x2="12" y2="23"></line>
+                            <line x1="8" y1="23" x2="16" y2="23"></line>
+                        </svg>
+                    </button>
+
+                    <button id="send-btn" class="send-button" onclick="sendMessage()" title="Send message">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="disclaimer-microtext">
+                    Serene is an empathetic AI companion, not a licensed medical professional. In severe crisis, call emergency services or click <strong>SOS Helplines</strong>.
+                </div>
+            </footer>
+        </div>
     </div>
-</div>
 
-<!-- Chat -->
-<div class="chat-wrapper">
-    <div id="chat-box"></div>
-    <div class="input-area">
-        <input type="text" id="user-input" placeholder="Type your message..." />
-        <button onclick="sendMessage()">Send</button>
+    <!-- ===================================================== -->
+    <!-- MODAL 1: ZEN MINDFUL BREATHING EXPERIENCE             -->
+    <!-- ===================================================== -->
+    <div id="breathing-modal" class="modal-backdrop hidden" onclick="handleModalBackdropClick(event, 'breathing-modal')">
+        <div class="zen-modal-card">
+            <div class="zen-modal-header">
+                <div class="zen-title-group">
+                    <h2>🌬️ Mindful Respiration</h2>
+                    <p>Slow your heart rate and trigger your relaxation response.</p>
+                </div>
+                <button class="icon-btn close-modal-btn" onclick="closeBreathingModal()">✕</button>
+            </div>
+
+            <!-- TECHNIQUE SELECTOR TABS -->
+            <div class="technique-pills">
+                <button class="tech-pill active" id="tab-box" onclick="selectBreathingTechnique('box')">
+                    <strong>Box Breathing</strong>
+                    <span>4s In • 4s Hold • 4s Out • 4s Hold</span>
+                </button>
+                <button class="tech-pill" id="tab-478" onclick="selectBreathingTechnique('478')">
+                    <strong>4-7-8 Relaxing</strong>
+                    <span>4s In • 7s Hold • 8s Out</span>
+                </button>
+            </div>
+
+            <!-- ZEN BREATHING CANVAS -->
+            <div class="zen-breathing-stage">
+                <div class="zen-ring-outer">
+                    <div class="zen-ring-inner">
+                        <div class="zen-breathing-orb" id="breathing-orb">
+                            <div class="orb-content">
+                                <span class="orb-instruction" id="breathing-instruction">Breathe In</span>
+                                <span class="orb-timer" id="breathing-timer">4s</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SESSION METRICS -->
+            <div class="zen-metrics">
+                <div class="metric-item">
+                    <span class="metric-label">Completed Cycles</span>
+                    <strong class="metric-value" id="cycle-count">0</strong>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">Technique Goal</span>
+                    <strong class="metric-value" id="technique-goal">Deep Calm</strong>
+                </div>
+            </div>
+
+            <!-- ACTIONS -->
+            <div class="zen-controls">
+                <button id="breathing-toggle-btn" class="btn-zen-primary" onclick="toggleBreathing()">Start Exercise</button>
+                <button class="btn-zen-secondary" onclick="resetBreathing()">Reset</button>
+            </div>
+        </div>
     </div>
-</div>
 
+    <!-- ===================================================== -->
+    <!-- MODAL 2: 5-4-3-2-1 GROUNDING WIZARD                   -->
+    <!-- ===================================================== -->
+    <div id="grounding-modal" class="modal-backdrop hidden" onclick="handleModalBackdropClick(event, 'grounding-modal')">
+        <div class="zen-modal-card grounding-modal-card">
+            <div class="zen-modal-header">
+                <div class="zen-title-group">
+                    <h2>🧘 5-4-3-2-1 Sensory Grounding</h2>
+                    <p>Reconnect with your physical surroundings to break panic cycles.</p>
+                </div>
+                <button class="icon-btn close-modal-btn" onclick="closeGroundingModal()">✕</button>
+            </div>
 
-<script src="script.js"></script>
+            <!-- WIZARD STEP CONTAINER -->
+            <div class="grounding-wizard-stage" id="grounding-stage">
+                <div class="step-card" id="grounding-step-card">
+                    <div class="step-badge" id="step-badge">STEP 1 OF 5</div>
+                    <div class="step-icon" id="step-icon">👁️</div>
+                    <h3 id="step-title">Acknowledge 5 things you can SEE around you</h3>
+                    <p id="step-description">Look for small details: the texture of a desk, light filtering through a window, a cup, or a shadow.</p>
+                </div>
+            </div>
 
+            <div class="grounding-actions">
+                <button class="btn-zen-secondary" id="grounding-prev-btn" onclick="prevGroundingStep()" style="display: none;">Previous</button>
+                <button class="btn-zen-primary" id="grounding-next-btn" onclick="nextGroundingStep()">Next Step →</button>
+            </div>
+        </div>
+    </div>
 
+    <!-- ===================================================== -->
+    <!-- MODAL 3: DAILY MOOD JOURNAL & VISUAL TREND ANALYTICS   -->
+    <!-- ===================================================== -->
+    <div id="mood-modal" class="modal-backdrop hidden" onclick="handleModalBackdropClick(event, 'mood-modal')">
+        <div class="zen-modal-card mood-modal-card">
+            <div class="zen-modal-header">
+                <div class="zen-title-group">
+                    <h2>📊 Mood Journal & Analytics</h2>
+                    <p>Track your emotional journey and discover your wellness patterns.</p>
+                </div>
+                <button class="icon-btn close-modal-btn" onclick="closeMoodModal()">✕</button>
+            </div>
 
+            <!-- MOOD MODAL TABS -->
+            <div class="mood-tabs-header">
+                <button class="mood-tab-btn active" id="tab-mood-checkin" onclick="switchMoodTab('checkin')">
+                    <span>📝 Quick Check-In</span>
+                </button>
+                <button class="mood-tab-btn" id="tab-mood-analytics" onclick="switchMoodTab('analytics')">
+                    <span>📈 Visual Mood Wave</span>
+                </button>
+            </div>
+
+            <!-- TAB 1: QUICK CHECK-IN -->
+            <div id="mood-checkin-tab-view">
+                <div class="mood-picker-grid">
+                    <button class="mood-box" onclick="logDailyMood('Exhausted', '😴')">
+                        <span class="mood-large">😴</span>
+                        <strong>Exhausted</strong>
+                    </button>
+                    <button class="mood-box" onclick="logDailyMood('Anxious', '😰')">
+                        <span class="mood-large">😰</span>
+                        <strong>Anxious</strong>
+                    </button>
+                    <button class="mood-box" onclick="logDailyMood('Neutral', '😐')">
+                        <span class="mood-large">😐</span>
+                        <strong>Neutral</strong>
+                    </button>
+                    <button class="mood-box" onclick="logDailyMood('Calm', '🌿')">
+                        <span class="mood-large">🌿</span>
+                        <strong>Calm</strong>
+                    </button>
+                    <button class="mood-box" onclick="logDailyMood('Joyful', '✨')">
+                        <span class="mood-large">✨</span>
+                        <strong>Joyful</strong>
+                    </button>
+                </div>
+
+                <div class="mood-history-card">
+                    <span class="metric-label">Recent Mood Entries:</span>
+                    <div id="mood-history-list" class="mood-history-tags">
+                        <span class="empty-note">No moods logged yet today.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: VISUAL TREND ANALYTICS -->
+            <div id="mood-analytics-tab-view" class="hidden">
+                <!-- STATS ROW -->
+                <div class="mood-stats-grid">
+                    <div class="mood-stat-card">
+                        <span class="stat-title">Total Logs</span>
+                        <strong class="stat-value" id="stat-total-logs">0</strong>
+                    </div>
+                    <div class="mood-stat-card">
+                        <span class="stat-title">Dominant Mood</span>
+                        <strong class="stat-value" id="stat-top-mood">--</strong>
+                    </div>
+                    <div class="mood-stat-card">
+                        <span class="stat-title">Avg Balance</span>
+                        <strong class="stat-value" id="stat-avg-score">--</strong>
+                    </div>
+                </div>
+
+                <!-- SVG MOOD WAVE CHART CONTAINER -->
+                <div class="mood-chart-container">
+                    <div class="chart-y-axis">
+                        <span>✨ Joy</span>
+                        <span>🌿 Calm</span>
+                        <span>😐 Neutral</span>
+                        <span>😰 Anxious</span>
+                        <span>😴 Low</span>
+                    </div>
+                    <div class="chart-canvas-wrapper">
+                        <svg id="mood-chart-svg" class="mood-chart-svg" viewBox="0 0 460 170" preserveAspectRatio="none">
+                            <!-- Injected dynamically via script.js -->
+                        </svg>
+                    </div>
+                </div>
+                <div class="chart-caption" id="chart-caption">Emotional trajectory over time</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================== -->
+    <!-- MODAL 4: CBT THOUGHT REFRAMER ("CATCH THAT THOUGHT")   -->
+    <!-- ===================================================== -->
+    <div id="cbt-modal" class="modal-backdrop hidden" onclick="handleModalBackdropClick(event, 'cbt-modal')">
+        <div class="zen-modal-card cbt-modal-card">
+            <div class="zen-modal-header">
+                <div class="zen-title-group">
+                    <h2>🧠 CBT Thought Reframer</h2>
+                    <p>Challenge anxious spiral loops with compassionate reality checks.</p>
+                </div>
+                <button class="icon-btn close-modal-btn" onclick="closeCbtModal()">✕</button>
+            </div>
+
+            <!-- STEP 1: INPUT FORM -->
+            <div id="cbt-input-view">
+                <div class="cbt-field">
+                    <label for="cbt-thought-input">What automatic negative thought or fear is bothering you?</label>
+                    <textarea 
+                        id="cbt-thought-input" 
+                        class="cbt-textarea" 
+                        placeholder="e.g. Sab log mere baare mein bura soch rahe hain, ya mujhse yeh exam clear nahi hoga..." 
+                        rows="3"></textarea>
+                </div>
+
+                <div class="cbt-field">
+                    <div class="intensity-label-row">
+                        <label>How strongly do you believe this thought right now?</label>
+                        <span id="cbt-intensity-val" class="intensity-badge">80%</span>
+                    </div>
+                    <input 
+                        type="range" 
+                        id="cbt-intensity-slider" 
+                        min="10" 
+                        max="100" 
+                        value="80" 
+                        step="5" 
+                        oninput="document.getElementById('cbt-intensity-val').textContent = this.value + '%'" />
+                </div>
+
+                <button class="btn-zen-primary full-width" id="cbt-analyze-btn" onclick="submitCbtReframe()">
+                    <span>✨ Analyze & Reframe Thought</span>
+                </button>
+            </div>
+
+            <!-- STEP 2: REFRAME RESULTS (Hidden until submitted) -->
+            <div id="cbt-result-view" class="hidden">
+                <div class="cbt-header-badge">
+                    <span class="distortion-chip" id="cbt-distortion-badge">Catastrophizing</span>
+                </div>
+                
+                <p class="cbt-explanation" id="cbt-explanation"></p>
+
+                <div class="cbt-box cbt-questions-box">
+                    <strong>❓ Reality Check Questions:</strong>
+                    <ul id="cbt-questions-list"></ul>
+                </div>
+
+                <div class="cbt-box cbt-reframe-card">
+                    <div class="reframe-label">🌿 Balanced & Realistic Perspective:</div>
+                    <p id="cbt-reframe-text"></p>
+                </div>
+
+                <div class="cbt-box cbt-action-box">
+                    <strong>⚡ 2-Minute Grounding Action:</strong>
+                    <p id="cbt-action-text"></p>
+                </div>
+
+                <div class="cbt-result-actions">
+                    <button class="btn-zen-secondary" onclick="resetCbtView()">← Reframe Another</button>
+                    <button class="btn-zen-primary" onclick="sendCbtToChat()">Send to Serene Chat 💬</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================== -->
+    <!-- MODAL 4: 24/7 CRISIS EMERGENCY HELPLINES             -->
+    <!-- ===================================================== -->
+    <div id="sos-modal" class="modal-backdrop hidden" onclick="handleModalBackdropClick(event, 'sos-modal')">
+        <div class="zen-modal-card sos-modal-card">
+            <div class="zen-modal-header">
+                <div class="zen-title-group">
+                    <h2 class="text-danger">🆘 Immediate Crisis Lifelines</h2>
+                    <p>You don't have to carry this alone. Free, confidential help is waiting for your call right now.</p>
+                </div>
+                <button class="icon-btn close-modal-btn" onclick="closeSosModal()">✕</button>
+            </div>
+
+            <div class="lifeline-cards">
+                <div class="lifeline-card highlight-india">
+                    <div class="card-lead">
+                        <span class="flag-icon">🇮🇳</span>
+                        <div>
+                            <strong>Tele-MANAS (Govt. of India)</strong>
+                            <small>24x7 Toll-Free, Confidential support in 20+ languages</small>
+                        </div>
+                    </div>
+                    <a href="tel:14416" class="lifeline-btn">📞 Call 14416</a>
+                </div>
+
+                <div class="lifeline-card">
+                    <div class="card-lead">
+                        <span class="flag-icon">🇮🇳</span>
+                        <div>
+                            <strong>KIRAN National Helpline</strong>
+                            <small>Ministry of Social Justice & Empowerment (24x7)</small>
+                        </div>
+                    </div>
+                    <a href="tel:18005990019" class="lifeline-btn">📞 1800-599-0019</a>
+                </div>
+
+                <div class="lifeline-card">
+                    <div class="card-lead">
+                        <span class="flag-icon">🇮🇳</span>
+                        <div>
+                            <strong>Vandrevala Foundation</strong>
+                            <small>24x7 Free mental health counseling & crisis intervention</small>
+                        </div>
+                    </div>
+                    <a href="tel:9999666555" class="lifeline-btn">📞 9999 666 555</a>
+                </div>
+
+                <div class="lifeline-card">
+                    <div class="card-lead">
+                        <span class="flag-icon">🇺🇸 🇨🇦</span>
+                        <div>
+                            <strong>988 Suicide & Crisis Lifeline</strong>
+                            <small>Free call & text support across US and Canada</small>
+                        </div>
+                    </div>
+                    <a href="tel:988" class="lifeline-btn">📞 Call 988</a>
+                </div>
+
+                <div class="lifeline-card">
+                    <div class="card-lead">
+                        <span class="flag-icon">🇬🇧</span>
+                        <div>
+                            <strong>NHS 111 / Shout Text Service</strong>
+                            <small>Urgent support / Text SHOUT to 85258</small>
+                        </div>
+                    </div>
+                    <a href="tel:111" class="lifeline-btn">📞 Call 111</a>
+                </div>
+            </div>
+
+            <div class="sos-reassurance">
+                💡 <strong>Immediate Danger?</strong> If you or someone you know is in immediate physical harm, please dial your country's local emergency response (112 in India / 911 in US / 999 in UK).
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>

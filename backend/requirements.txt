@@ -5,4 +5,5 @@ numpy==2.2.6               # Required by scikit-learn
 nltk==3.9.2                # Optional: text processing (if future NLP use)
 joblib==1.5.3              # Model serialization (optional if needed)
 python-dotenv==1.2.1       # Load environment variables (optional)
+requests>=2.31.0            # External LLM API calls (Gemini/Groq)
 gunicorn

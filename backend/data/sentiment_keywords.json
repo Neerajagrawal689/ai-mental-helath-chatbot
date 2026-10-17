@@ -1,10 +1,10 @@
 {
-  "stress": ["stress", "pressure", "burden", "exam", "deadline", "workload"],
-  "anxiety": ["anxious", "nervous", "panic", "fear", "worried"],
-  "sadness": ["sad", "depressed", "low", "cry", "heartbroken"],
-  "lonely": ["alone", "lonely", "isolated", "no friends"],
-  "angry": ["angry", "frustrated", "irritated", "rage"],
-  "overwhelmed": ["tired", "exhausted", "burnout", "too much work"],
-  "fear": ["scared", "afraid", "fearful"],
-  "happy": ["happy", "good", "excited", "great", "joy"]
+  "stress": ["stress", "pressure", "burden", "exam", "deadline", "workload", "pareshan", "pareshani", "bojh", "thak gaya", "thak gayi"],
+  "anxiety": ["anxious", "nervous", "panic", "fear", "worried", "chinta", "ghabrahat", "bechaini", "dar lag raha", "ghabra"],
+  "sadness": ["sad", "depressed", "low", "cry", "heartbroken", "dukhi", "dukh", "udaas", "udas", "rona", "dard", "toot gaya", "toot gayi"],
+  "lonely": ["alone", "lonely", "isolated", "no friends", "akela", "akeli", "koi nahi hai", "tanha"],
+  "angry": ["angry", "frustrated", "irritated", "rage", "gussa", "irritate", "naraz", "chidh"],
+  "overwhelmed": ["tired", "exhausted", "burnout", "too much work", "sambhal nahi raha", "himmat nahi"],
+  "fear": ["scared", "afraid", "fearful", "khauf", "dar"],
+  "happy": ["happy", "good", "excited", "great", "joy", "khush", "accha", "badhiya", "sukoon"]
 }
