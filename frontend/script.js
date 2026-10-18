@@ -65,6 +65,17 @@ document.addEventListener("DOMContentLoaded", () => {
             toggleSidebar();
         }
     });
+
+    // Dismiss ambient sound menu when tapping outside (Mobile + Desktop UX)
+    document.addEventListener("click", (e) => {
+        const ambientContainer = document.querySelector(".ambient-sound-container");
+        const ambientMenu = document.getElementById("ambient-sound-menu");
+        if (ambientMenu && !ambientMenu.classList.contains("hidden")) {
+            if (ambientContainer && !ambientContainer.contains(e.target)) {
+                ambientMenu.classList.add("hidden");
+            }
+        }
+    });
 });
 
 // =====================================================
@@ -109,6 +120,19 @@ function toggleSidebar() {
             sidebar.classList.toggle("collapsed");
             const isCollapsed = sidebar.classList.contains("collapsed");
             localStorage.setItem("serene_sidebar_collapsed", isCollapsed ? "true" : "false");
+        }
+    }
+}
+
+function closeSidebarIfMobile() {
+    if (window.innerWidth <= 768) {
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("sidebar-overlay");
+        if (sidebar && sidebar.classList.contains("open")) {
+            sidebar.classList.remove("open");
+        }
+        if (overlay && overlay.classList.contains("open")) {
+            overlay.classList.remove("open");
         }
     }
 }
@@ -326,6 +350,7 @@ function selectMood(moodName, emoji) {
 
 // Clear Chat / New Chat
 async function newChat() {
+    closeSidebarIfMobile();
     try {
         await fetch(`${BACKEND_URL}/reset`, { method: "POST", credentials: "include" });
     } catch (e) {}
@@ -371,6 +396,7 @@ const TECHNIQUES = {
 };
 
 function openBreathingModal() {
+    closeSidebarIfMobile();
     const modal = document.getElementById("breathing-modal");
     if (modal) modal.classList.remove("hidden");
 }
@@ -522,6 +548,7 @@ const GROUNDING_STEPS = [
 let currentGroundingIndex = 0;
 
 function openGroundingModal() {
+    closeSidebarIfMobile();
     currentGroundingIndex = 0;
     renderGroundingStep();
     const modal = document.getElementById("grounding-modal");
@@ -578,6 +605,7 @@ const MOOD_SCORES = {
 };
 
 function openMoodModal() {
+    closeSidebarIfMobile();
     const modal = document.getElementById("mood-modal");
     if (modal) modal.classList.remove("hidden");
     switchMoodTab("checkin");
@@ -1077,6 +1105,7 @@ function playZenSound() {
 let latestReframedThought = "";
 
 function openCbtModal() {
+    closeSidebarIfMobile();
     const modal = document.getElementById("cbt-modal");
     if (modal) modal.classList.remove("hidden");
     resetCbtView();
@@ -1183,6 +1212,7 @@ function sendCbtToChat() {
 // SOS EMERGENCY HELPLINES MODAL
 // =====================================================
 function openSosModal() {
+    closeSidebarIfMobile();
     const modal = document.getElementById("sos-modal");
     if (modal) modal.classList.remove("hidden");
 }
